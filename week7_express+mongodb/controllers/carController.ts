@@ -15,11 +15,12 @@ export const getAllCars = async (
   res: Response,
   next: NextFunction,
 ) => {
+  const query = req.query;
   try {
     res.status(200).json({
       status: 'success',
       method: 'Get',
-      data: await CarModel.find(),
+      data: await CarModel.find(query),
     });
   } catch (err: any) {
     logger.log(err);
@@ -36,7 +37,10 @@ export const getCar = async (
     res.status(200).json({
       status: 'success',
       method: 'Get',
-      data: await CarModel.findById(req.params.id),
+      data: await CarModel.findById(req.params.id).populate({
+        path: 'mechanics',
+        select: '-__v',
+      }),
     });
   } catch (err: any) {
     logger.log(err);
